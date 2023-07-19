@@ -151,9 +151,41 @@ _________
 
 ![image](https://github.com/OCRchamomile/OCR/assets/126798126/d1d3ac66-4da2-4548-a75e-8074860b5943)
 
-Он нашел почти все жэлементы таблицы и выделил опознаные значения прямоугольными областями
+Он нашел почти все элементы таблицы и выделил опознаные значения прямоугольными областями
 
 ![image](https://github.com/OCRchamomile/OCR/assets/126798126/5dd49c88-98da-4bcc-9b61-b0351d92f753)
+
+После идет формирование DataFrame 
+
+    def create_df(df_result):
+      df_new = pd.DataFrame(columns=['Класс крови', 'Дата донации', 'Дата добавления донации', 'Тип донации'])
+    
+      for i in range(len(df_result)):
+        if df_result['text'][i].lower() in ['пл/д (бв)', 'плад (бв)', 'паф(бв)', 'п/ф(бв)', 'пф(бв)']:
+          df_new.loc[len(df_new), ['Дата донации']] = df_result['text'][i-1]
+          df_new.loc[len(df_new)-1, ['Класс крови']] = 'Плазма'
+          df_new.loc[len(df_new)-1, ['Тип донации']] = 'Безвозмездно'
+          df_new.loc[len(df_new)-1, ['Дата добавления донации']] = pd.to_datetime('today', dayfirst=True).normalize()
+        elif df_result['text'][i].lower() in ['крад (бв)', 'крод (бв)', 'круд (бв)', 'кр/д (бв)', 'крд (бв)', 'кр/д(бв)',
+                                              'с/д бв)" |', 'кред (бв)', 'крд (бв)', 'к/д(бв)', 'хр/д (бв) ф']:
+          df_new.loc[len(df_new), ['Дата донации']] = df_result['text'][i-1]
+          df_new.loc[len(df_new)-1, ['Класс крови']] = 'Цельная кровь'
+          df_new.loc[len(df_new)-1, ['Тип донации']] = 'Безвозмездно'
+          df_new.loc[len(df_new)-1, ['Дата добавления донации']] = pd.to_datetime('today', dayfirst=True).normalize()
+        elif df_result['text'][i].lower() in ['цд (бв)', 'ц/д (бв)', 'таф(бв)', 'тф(бв)', 'т/ф(бв)']:
+          df_new.loc[len(df_new), ['Дата донации']] = df_result['text'][i-1]
+          df_new.loc[len(df_new)-1, ['Класс крови']] = 'Тромбоциты'
+          df_new.loc[len(df_new)-1, ['Тип донации']] = 'Безвозмездно'
+          df_new.loc[len(df_new)-1, ['Дата добавления донации']] = pd.to_datetime('today', dayfirst=True).normalize()
+        else:
+          pass
+    
+      try:
+        df_new['Дата донации'] = pd.to_datetime(df_new['Дата донации'], format='%d.%m.%Y', dayfirst=True)
+      except:
+        pass
+      df_new = df_new.sort_values(by='Дата донации').reset_index(drop=True)
+      return df_new
 
 
 
