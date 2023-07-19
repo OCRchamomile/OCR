@@ -129,9 +129,13 @@
 - Возвращает преобразованное изображение.
 
 Пример работы функции:
+
 Было
+
 ![image](https://github.com/OCRchamomile/OCR/assets/126798126/909b9dba-ecd4-46f0-bc04-6c14dde25bfe)
+
 Стало
+
 ![image](https://github.com/OCRchamomile/OCR/assets/126798126/97780bd8-1b98-407d-8457-08dcca577024)
 
 
