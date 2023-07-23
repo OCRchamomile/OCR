@@ -68,7 +68,7 @@ async def create_upload_file(file: UploadFile):
         if file.content_type in ["image/jpeg", "image/jpg", "image/png"]:
             result, processing_time = invoke_ocr(img_scale, file.content_type)
         else:
-            return {"error": "Invalid file type. Only JPG/PNG images and PDF are allowed."}
+            return {"error": "Invalid file type. Only JPG/PNG images are allowed."}
       
     return JSONResponse(status_code=status.HTTP_200_OK, content=result)
 
